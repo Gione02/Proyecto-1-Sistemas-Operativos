@@ -125,4 +125,60 @@ def finalizar_proceso(proceso):
 
 
 
+
+
+
+
+# 444444444
+
+   #  INTERFAZ GRÁFICA 
+
+#   Módulo de interfaz gráfica usando CustomTkinter.
+#Contiene la configuración de ventana principal y todos los widgets.
+
+# Configuración de ventana principal
+ventana = ctk.CTk() # Crear instancia de ventana principal
+ventana.title("Simulador de Gestión de Memoria") # Título de la ventana
+ventana.geometry("800x500")  # Dimensiones (ancho x alto)
+
+# Fondo opcional (manejo de errores si no hay imagen)
+try: # Cargar imagen de fondo si existe
+    imagen_fondo = ctk.CTkImage(light_image=Image.open("GEm.png"), size=(800, 500)) # Ruta de la imagen y tamaño
+    fondo = ctk.CTkLabel(ventana, image=imagen_fondo, text="")  # Crear label con la imagen
+    fondo.place(x=0, y=0, relwidth=1, relheight=1)
+except:
+    pass  # Continuar sin fondo si no se encuentra la imagen
+
+# Campos de entrada
+
+# Campo para nombre del proceso
+entry_nombre = ctk.CTkEntry(ventana, placeholder_text="Nombre del Proceso", width=200)
+entry_nombre.place(x=50, y=30)
+# Campo para memoria requerida
+entry_memoria = ctk.CTkEntry(ventana, placeholder_text="Memoria (MB)", width=200)
+entry_memoria.place(x=50, y=70)
+# Campo para duración del proceso
+entry_duracion = ctk.CTkEntry(ventana, placeholder_text="Duración (s)", width=200)
+entry_duracion.place(x=50, y=110)
+
+# Botón para agregar procesos
+agregar_btn = ctk.CTkButton(
+    ventana,
+    text="Agregar Proceso",
+    command=agregar_proceso,
+    width=150,
+    fg_color="#4CAF50",  # Verde
+    hover_color="#45A049"
+)
+agregar_btn.place(x=600, y=60)
+
+# Etiqueta de estado de RAM
+estado_label = ctk.CTkLabel(
+    ventana,
+    text=f"RAM disponible: {RAM_TOTAL} MB",
+    font=ctk.CTkFont(size=14, weight="bold")
+)
+estado_label.place(x=50, y=160)
+
+# FIN 444444444
         
