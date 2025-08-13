@@ -123,10 +123,89 @@ def finalizar_proceso(proceso):
     revisar_cola()      # Verificar si procesos en espera pueden ejecutarse
     actualizar_estado() # Reflejar cambios en la GUI
 
+#333333333333333333333333333333333333
 
+def revisar_cola():
+   # """Revisa la cola de espera y ejecuta procesos si hay memoria."""
+   #Flujo de operación:
+     #  1. Itera sobre una copia de la cola de espera (para evitar modificaciones durante la iteración)
+     #  2. Para cada proceso verifica si hay suficiente RAM disponible
+     #  3. Si hay memoria:
+     #       - Remueve el proceso de la cola de espera
+     #      - Lo envía a ejecución mediante ejecutar_proceso()
+    
+    for proceso in cola_espera[:]:  # Iterar sobre una copia de la lista
+        if proceso.memoria <= ram_disponible:
+            cola_espera.remove(proceso)
+            ejecutar_proceso(proceso)
 
+def actualizar_estado():
 
+   # Actualiza todos los elementos de la interfaz gráfica con el estado actual del sistema.
+    
+   # Componentes actualizados:
+   #     1. Label de RAM disponible
+   #     2. Lista de procesos en ejecución
+   #     3. Lista de procesos en cola de espera
+        
+   # Efectos secundarios:
+   #     - Modifica el estado de los widgets CTkTextbox (normal/disabled)
+   #     - Actualiza el contenido de los textos
+   # """Actualiza la interfaz con el estado actual."""
 
+    estado_label.configure(text=f"RAM disponible: {ram_disponible} MB")
+    
+    # Actualizar lista de procesos en ejecución
+    lista_procesos.configure(state="normal")
+    lista_procesos.delete("1.0", "end")
+    for p in procesos_activos:
+        lista_procesos.insert("end", f"{p.nombre} | PID: {p.pid} | {p.memoria}MB | {p.duracion}s\n")
+    lista_procesos.configure(state="disabled")
+    
+    # Actualizar cola de espera
+    lista_espera.configure(state="normal")
+    lista_espera.delete("1.0", "end")
+    for p in cola_espera:
+        lista_espera.insert("end", f"{p.nombre} | PID: {p.pid} | {p.memoria}MB\n")
+    lista_espera.configure(state="disabled")
+
+def agregar_proceso():
+    #"""Agrega un nuevo proceso desde la interfaz."""
+   # Flujo:
+   #     1. Obtiene valores de los campos de entrada
+   #     2. Valida que los valores sean positivos
+   #     3. Crea un nuevo proceso
+   #     4. Intenta ejecutarlo
+   #     5. Limpia los campos de entrada
+        
+   # Manejo de errores:
+   #     - ValueError: Si memoria o duración no son números positivos
+   #     - Muestra mensaje de error en CTkMessagebox
+        
+   # Campos afectados:
+   #     - entry_nombre (str)
+   #     - entry_memoria (int)
+   #     - entry_duracion (int)
+    try: # Obtener valores de la interfaz
+        nombre = entry_nombre.get()
+        memoria = int(entry_memoria.get())
+        duracion = int(entry_duracion.get())
+
+        if memoria <= 0 or duracion <= 0: # Validación de entradas
+            raise ValueError("Valores deben ser positivos")
+
+        nuevo = crear_proceso(nombre, memoria, duracion)  # Creación y ejecución del proceso
+        ejecutar_proceso(nuevo)
+
+        # Limpiar campos después de agregar
+        entry_nombre.delete(0, "end")
+        entry_memoria.delete(0, "end")
+        entry_duracion.delete(0, "end")
+
+    except ValueError:  # Mostrar error en cuadro de diálogo
+        ctk.CTkMessagebox(title="Error", message="Memoria y duración deben ser números positivos")
+
+#termina parte 33333333333333333333333333333333333333333333333333333333
 
 
 # 444444444
