@@ -53,3 +53,76 @@ class Proceso:
         self.nombre = nombre    # Nombre descriptivo (ej: "Navegador")
         self.memoria = memoria  # Memoria necesaria para ejecución
         self.duracion = duracion # Duración estimada de ejecución
+
+# FUNCIONES DE PROCESOS #(PARTE 2 ERICK RONALDIÑO APEN PEREZ)
+def crear_proceso(nombre, memoria, duracion):
+    # Crea y retorna una nueva instancia de Proceso.
+    
+    # Args:
+     #   nombre (str): Nombre descriptivo del proceso. Si está vacío, se autogenera.
+     #   memoria (int): Memoria requerida en MB (debe ser positivo).
+     #   duracion (int): Tiempo de ejecución en segundos (debe ser positivo).
+        
+    #Returns:
+    #    Proceso: Nueva instancia configurada.
+
+   # """Crea un nuevo proceso con nombre, memoria y duración."""
+    global pid_counter
+    if not nombre:
+        nombre = f"Proceso{pid_counter}"  # Nombre por defecto si está vacío
+    p = Proceso(pid_counter, nombre, memoria, duracion)
+    pid_counter += 1
+    return p
+
+def ejecutar_proceso(proceso):
+   #  Intenta ejecutar un proceso si hay suficiente memoria disponible.
+   # Si no hay memoria, lo coloca en la cola de espera.
+    
+   # Args:
+    #    proceso (Proceso): Proceso a ejecutar.
+        
+    # Side Effects:
+    #    - Modifica ram_disponible
+    #    - Actualiza procesos_activos o cola_espera
+    #   - Inicia un hilo para finalización automática
+    #   - Actualiza la interfaz gráfica
+
+    #"""Intenta ejecutar un proceso si hay memoria disponible."""
+    global ram_disponible
+    if proceso.memoria <= ram_disponible:
+        # Asignar memoria y agregar a procesos activos
+        ram_disponible -= proceso.memoria
+        procesos_activos.append(proceso)
+        actualizar_estado()
+        # Ejecutar en un hilo para no bloquear la interfaz
+        threading.Thread(target=finalizar_proceso, args=(proceso,)).start()
+    else:
+        # Insuficiente memoria -> enviar a cola de espera
+        cola_espera.append(proceso)
+        actualizar_estado()
+
+def finalizar_proceso(proceso):
+   #Finaliza un proceso después de su tiempo de ejecución y libera recursos.
+   #
+   #Args:
+   #    proceso (Proceso): Proceso a finalizar.
+        
+   #Workflow:
+   #    1. Espera el tiempo de duración del proceso (simulado con sleep)
+   #    2. Libera la memoria ocupada
+   #    3. Remueve el proceso de la lista de activos
+   #   4. Revisa si procesos en espera pueden ejecutarse
+   #    5. Actualiza la interfaz
+   
+   #"""Finaliza un proceso después de su tiempo de ejecución."""
+
+    time.sleep(proceso.duracion) # Simular tiempo de ejecución
+    global ram_disponible
+    procesos_activos.remove(proceso)
+    ram_disponible += proceso.memoria # Liberar memoria
+    revisar_cola()      # Verificar si procesos en espera pueden ejecutarse
+    actualizar_estado() # Reflejar cambios en la GUI
+
+
+
+        
