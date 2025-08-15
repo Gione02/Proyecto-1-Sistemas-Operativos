@@ -1,71 +1,48 @@
 # main.py
-"""
-SIMULADOR DE GESTIÓN DE MEMORIA
---------------------------------
-Este programa simula la administración de memoria RAM en un sistema operativo,
-mostrando cómo se asignan procesos y se maneja la cola de espera cuando la memoria es insuficiente.
+#SIMULADOR DE GESTIÓN DE MEMORIA
 
-Desarrollado usando:
-- CustomTkinter para la interfaz gráfica
-- Threading para ejecución paralela de procesos
-- PIL para manejo de imágenes (opcional)
+#Este programa simula la administración de memoria RAM en un sistema operativo,
+#mostrando cómo se asignan procesos y se maneja la cola de espera cuando la memoria es insuficiente.
+#  """Desarrollado usando""":
+# - CustomTkinter para la interfaz gráfica
+# - Threading para ejecución paralela de procesos
+# - PIL para manejo de imágenes (opcional)
 
-#  MÓDULOS IMPORTADOS 
 import customtkinter as ctk  # Para la interfaz gráfica moderna
 import threading             # Para ejecutar procesos en segundo plano
 import time                  # Para simular el tiempo de ejecución de procesos
 from PIL import Image        # Para manejar imágenes de fondo (opcional)
+#  CONFIGURACIÓN INICIAL 
+# Inicializar CustomTkinter con tema oscuro y azul
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
 
-# CONFIGURACIÓN INICIAL 
-# Configuración de la interfaz gráfica
-ctk.set_appearance_mode("dark")          # Tema oscuro
-ctk.set_default_color_theme("blue")      # Color principal azul
+# Variables globales del sistema
+RAM_TOTAL = 1024  # RAM total en MB (simulada)
+ram_disponible = RAM_TOTAL
+procesos_activos = []  # Lista de procesos en ejecución
+cola_espera = []       # Procesos esperando por memoria
+pid_counter = 1        # Contador para IDs de procesos
 
-# VARIABLES GLOBALES 
-RAM_TOTAL = 1024           # Memoria RAM total disponible en MB (valor simulado)
-ram_disponible = RAM_TOTAL # Memoria RAM actualmente disponible
-procesos_activos = []      # Lista de procesos actualmente en ejecución
-cola_espera = []           # Procesos en espera por falta de memoria
-pid_counter = 1            # Contador para asignar IDs únicos a los procesos
-
-#CLASE PROCESO 
+# CLASE PROCESO 
 class Proceso:
-    
-    Representa un proceso en el sistema operativo.
-    
-    Atributos:
-        pid (int): Identificador único del proceso
-        nombre (str): Nombre descriptivo del proceso
-        memoria (int): Cantidad de memoria RAM requerida (en MB)
-        duracion (int): Tiempo de ejecución del proceso (en segundos)
-   
+    """Representa un proceso con PID, nombre, memoria y tiempo de ejecución."""
     def __init__(self, pid, nombre, memoria, duracion):
-        
-        Inicializa un nuevo proceso.
-        
-        Args:
-            pid: Identificador único (entero)
-            nombre: Nombre del proceso (str)
-            memoria: Memoria requerida en MB (entero positivo)
-            duracion: Tiempo de ejecución en segundos (entero positivo)
-       
-        self.pid = pid          # ID del proceso (Process ID)
-        self.nombre = nombre    # Nombre descriptivo (ej: "Navegador")
-        self.memoria = memoria  # Memoria necesaria para ejecución
-        self.duracion = duracion # Duración estimada de ejecución
+        self.pid = pid          # Identificador único
+        self.nombre = nombre    # Nombre del proceso
+        self.memoria = memoria  # Memoria requerida (MB)
+        self.duracion = duracion  # Tiempo de ejecución (segundos)
 
-# FUNCIONES DE PROCESOS #(PARTE 2 ERICK RONALDIÑO APEN PEREZ)
+# FUNCIONES DE PROCESOS 
 def crear_proceso(nombre, memoria, duracion):
     # Crea y retorna una nueva instancia de Proceso.
     
     # Args:
      #   nombre (str): Nombre descriptivo del proceso. Si está vacío, se autogenera.
      #   memoria (int): Memoria requerida en MB (debe ser positivo).
-     #   duracion (int): Tiempo de ejecución en segundos (debe ser positivo).
-        
+     #   duracion (int): Tiempo de ejecución en segundos (debe ser positivo).       
     #Returns:
     #    Proceso: Nueva instancia configurada.
-
    # """Crea un nuevo proceso con nombre, memoria y duración."""
     global pid_counter
     if not nombre:
@@ -73,7 +50,6 @@ def crear_proceso(nombre, memoria, duracion):
     p = Proceso(pid_counter, nombre, memoria, duracion)
     pid_counter += 1
     return p
-
 def ejecutar_proceso(proceso):
    #  Intenta ejecutar un proceso si hay suficiente memoria disponible.
    # Si no hay memoria, lo coloca en la cola de espera.
@@ -122,8 +98,6 @@ def finalizar_proceso(proceso):
     ram_disponible += proceso.memoria # Liberar memoria
     revisar_cola()      # Verificar si procesos en espera pueden ejecutarse
     actualizar_estado() # Reflejar cambios en la GUI
-
-#333333333333333333333333333333333333
 
 def revisar_cola():
    # """Revisa la cola de espera y ejecuta procesos si hay memoria."""
@@ -204,12 +178,7 @@ def agregar_proceso():
 
     except ValueError:  # Mostrar error en cuadro de diálogo
         ctk.CTkMessagebox(title="Error", message="Memoria y duración deben ser números positivos")
-
-#termina parte 33333333333333333333333333333333333333333333333333333333
-
-
-# 444444444
-
+        
    #  INTERFAZ GRÁFICA 
 
 #   Módulo de interfaz gráfica usando CustomTkinter.
@@ -259,5 +228,68 @@ estado_label = ctk.CTkLabel(
 )
 estado_label.place(x=50, y=160)
 
-# FIN 444444444
-        
+#  COMPONENTES DE VISUALIZACIÓN 
+# """Módulo de visualización de estado del sistema.
+#Contiene los widgets para mostrar:
+#- Procesos en ejecución
+#- Procesos en cola de espera
+
+
+# Lista de procesos en ejecución
+ctk.CTkLabel(
+    ventana,
+    text="🟢 Procesos en ejecución",
+    font=ctk.CTkFont(weight="bold")
+).place(x=50, y=200)
+"""Widget que muestra el título de la sección de procesos activos.
+- Uso del emoji 🟢 para indicar estado activo
+- Fuente en negrita para mejor jerarquía visual
+- Posicionamiento absoluto en coordenadas (50, 200)
+"""
+
+lista_procesos = ctk.CTkTextbox(
+    ventana,
+    width=300,
+    height=150,
+    font=("Courier New", 12)
+)
+lista_procesos.place(x=50, y=230)
+lista_procesos.configure(state="disabled")  # Solo lectura
+
+
+# Cola de espera
+ctk.CTkLabel(
+    ventana,
+    text="🕓 Cola de espera",
+    font=ctk.CTkFont(weight="bold")
+).place(x=420, y=200)
+"""
+Widget de título para la cola de espera:
+- Emoji 🕓 indica estado de espera
+- Mismo estilo que título de procesos activos
+- Posicionado a la derecha (x=420) para balance visual
+"""
+lista_espera = ctk.CTkTextbox(
+    
+    ventana,
+    width=300,
+    height=150,
+    font=("Courier New", 12)
+)
+"""
+Área de texto paralela para procesos en espera:
+- Mismas dimensiones que lista_procesos para consistencia
+- Misma fuente para uniformidad en la interfaz
+- Posicionamiento simétrico al área de procesos activos
+"""
+lista_espera.place(x=420, y=230)
+lista_espera.configure(state="disabled")  # Solo lectura
+
+# Iniciar aplicación
+ventana.mainloop()
+"""
+Bucle principal de la aplicación:
+- Mantiene viva la ventana
+- Escucha eventos (clics, teclado, etc.)
+- Última línea ejecutable (el código después no se ejecuta hasta cerrar la ventana)
+"""
