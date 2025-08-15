@@ -1,36 +1,74 @@
-# Proyecto-1-Sistemas-Operativos   
-#  COMPONENTES DE VISUALIZACIÓN 
-# """Módulo de visualización de estado del sistema.
-#Contiene los widgets para mostrar:
-#- Procesos en ejecución
-#- Procesos en cola de espera
+     SIMULADOR DE GESTIÓN DE MEMORIA
 
+Descripción del Proyecto
+Sistema que **simula la administración de memoria RAM** en un sistema operativo, mostrando:  
+- Asignación de memoria a procesos  
+- Manejo de colas de espera  
+- Visualización en tiempo real del estado de la memoria  
+- Interfaz gráfica intuitiva  
 
-# Lista de procesos en ejecución
-ctk.CTkLabel(
-    ventana,
-    text="🟢 Procesos en ejecución",
-    font=ctk.CTkFont(weight="bold")
-).place(x=50, y=200)
-"""Widget que muestra el título de la sección de procesos activos.
-- Uso del emoji 🟢 para indicar estado activo
-- Fuente en negrita para mejor jerarquía visual
-- Posicionamiento absoluto en coordenadas (50, 200)
-"""
+Objetivos
+- Demostrar cómo los SO gestionan memoria limitada
+- Visualizar el concepto de colas de espera
+- Servir como herramienta educativa
 
-lista_procesos = ctk.CTkTextbox(
-    ventana,
-    width=300,
-    height=150,
-    font=("Courier New", 12)
-)
-lista_procesos.place(x=50, y=230)
-lista_procesos.configure(state="disabled")  # Solo lectura
+       Tecnologías Implementadas
 
+Lenguaje de Programación
+- Python 3.10+: Lenguaje base del proyecto, elegido por su sintaxis clara y amplia disponibilidad de librerías para desarrollo de sistemas.
 
-# Cola de espera
-ctk.CTkLabel(
-    ventana,
-    text="🕓 Cola de espera",
-    font=ctk.CTkFont(weight="bold")
-).place(x=420, y=200)
+Interfaz Gráfica
+- CustomTkinter: Versión moderna de Tkinter que permite crear interfaces visuales atractivas con widgets personalizables y temas oscuros/claros.
+
+Manejo de Procesos
+- Threading: Módulo nativo de Python utilizado para ejecutar múltiples procesos en paralelo sin bloquear la interfaz gráfica principal.
+
+Procesamiento de Imágenes
+- Pillow (PIL): Usado para cargar y manipular imágenes de fondo en la interfaz gráfica.
+
+        Requerimientos técnicos 
+customtkinter == 5.2.1   # Interfaz gráfica moderna
+pillow == 10.0.0         # Manejo de imágenes
+
+     Instrucciones de Instalación
+
+1. Requisitos Previos
+- Python 3.10 o superior  
+- Gestor de paquetes PIP  
+
+2. Instalación
+Ejecutar
+ Clonar repositorio
+git clone https://github.com/tu-usuario/simulador-memoria.git
+
+Entrar al directorio
+cd simulador-memoria
+
+Instalar dependencias
+pip install -r requirements.txt
+
+3. Ejecución
+Ejecutar python main.py
+
+          Instrucciones de Uso
+1. Ingresar datos del proceso:  
+   - Nombre (opcional)  
+   - Memoria requerida (MB)  
+   - Tiempo de ejecución (segundos)  
+
+2. Botones:  
+   - `Agregar Proceso`: Envía el proceso a memoria o cola de espera  
+
+3. Áreas de visualización:  
+   - Procesos activos: Muestra PID, memoria usada y tiempo restante  
+   - Cola de espera: Procesos pendientes por memoria
+
+           Estructura del Código
+```markdown
+simulador-memoria/
+├── main.py                # Lógica principal e interfaz
+├── requirements.txt       # Dependencias
+├── README.md              # Este archivo
+└── img/                   # Assets visuales
+    ├── screenshot.png     # Captura de pantalla
+    └── GEm.png            # Imagen de fondo (opcional)
